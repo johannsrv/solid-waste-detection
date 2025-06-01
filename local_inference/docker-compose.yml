@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    runtime: nvidia
+    volumes:
+      - ./train_model:/train_model
+      # - ./recycling_detection:/recycling_detection
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - NVIDIA_VISIBLE_DEVICES=all
+    command: ["python", "train.py"]
+    # command: ["python", "recycling_detection/__main__.py"]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
