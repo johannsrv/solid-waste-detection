@@ -2,7 +2,6 @@ import os
 
 import cv2
 import numpy as np
-import torch 
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 from tqdm import tqdm
@@ -10,12 +9,30 @@ from tqdm import tqdm
 
 
 class CreateDataLoader:
+    """
+    A class to generate PyTorch DataLoaders for training, validation, and testing image datasets.
+    Also computes the mean and standard deviation for normalization from the training dataset.
+
+    Attributes:
+        data_dir (str): Path to the root dataset directory containing 'train', 'val', and 'test' folders.
+        batch_size (int): Number of samples per batch. Default is 32.
+        num_workers (int): Number of subprocesses to use for data loading. Default is 4.
+        list_dir (list): List of folder names in the data directory.
+        data (list): Expected subdirectories in the data directory: ['train', 'val', 'test'].
+    """
     def __init__(
             self,
             data_dir: str, 
             batch_size: int = 32, 
             num_workers: int = 4) -> None:
+        """
+        Initializes the CreateDataLoader class with directory and data loading parameters.
 
+        Args:
+            data_dir (str): Root directory path containing dataset subfolders.
+            batch_size (int, optional): Batch size for DataLoaders. Defaults to 32.
+            num_workers (int, optional): Number of parallel data loading workers. Defaults to 4.
+        """
         self.batch_size = batch_size
         self.data_dir = data_dir
         self.num_workers = num_workers
@@ -24,6 +41,15 @@ class CreateDataLoader:
         self.data = ['train', 'val', 'test']
     
     def _list_imagenes(self) -> list[str]:
+        """
+        Collects paths of all images in the 'train' directory.
+
+        Returns:
+            list[str]: A list of file paths for images in the 'train' folder.
+
+        Raises:
+            ValueError: If the 'train' folder does not exist in the dataset directory.
+        """
         list_path_imagen = []
 
         if 'train' in self.list_dir:
@@ -52,6 +78,15 @@ class CreateDataLoader:
         return list_path_imagen
     
     def calculate_mean_std(self) -> tuple[list[float], list[float]]:
+        """
+        Calculates the per-channel mean and standard deviation of all images in the 'train' folder.
+
+        Returns:
+            tuple[list[float], list[float]]: Mean and standard deviation for each color channel (RGB).
+
+        Raises:
+            ValueError: If no images are found in the 'train' folder.
+        """
         paths_image = self._list_imagenes()
         
         if not paths_image:
@@ -83,6 +118,13 @@ class CreateDataLoader:
         return mean, std
 
     def datoloader_generar(self) -> list[DataLoader]:
+        """
+        Generates DataLoaders for each of the dataset folders: 'train', 'val', and 'test'.
+        Applies normalization using computed mean and std from the training set.
+
+        Returns:
+            list[DataLoader]: A list containing DataLoaders for train, val, and test datasets.
+        """
         list_batch = []
         means, std = self.calculate_mean_std()
 
