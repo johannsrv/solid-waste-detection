@@ -5,15 +5,14 @@ services:
     build: .
     runtime: nvidia
     volumes:
-      - ./train_model:/train_model
+      - ./train_model/__main__.py:/train_model/__main__.py 
       # - ./recycling_detection:/recycling_detection
     ports:
       - "8000:8000"
     environment:
       - PYTHONUNBUFFERED=1
       - NVIDIA_VISIBLE_DEVICES=all
-    command: ["python", "train.py"]
-    # command: ["python", "recycling_detection/__main__.py"]
+    command: ["python", "__main__.py"]
     deploy:
       resources:
         reservations:

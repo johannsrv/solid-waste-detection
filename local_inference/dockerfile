@@ -1,13 +1,21 @@
 FROM pytorch/pytorch:2.2.0-cuda11.8-cudnn8-runtime
 
-RUN pip install --upgrade pip
+RUN apt-get update && \
+    apt-get install -y \
+      libgl1-mesa-glx \
+      libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /train_model
 
-COPY train_model .
+# Primero copia los datos (carpeta crítica)
+COPY train_model/detecction_recycling.v1i.folder /train_model/detecction_recycling.v1i.folder
+
+# Luego copia requirements e instala
 COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN pip install -r requirements.txt
+# Finalmente copia el resto del código
+COPY train_model/ /train_model/
 
-CMD ["python", "train.py"]
-# CMD ["python", "__main__.py"]
+CMD ["python", "__main__.py"]

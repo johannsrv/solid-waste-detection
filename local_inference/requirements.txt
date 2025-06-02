@@ -3,4 +3,5 @@ numpy==1.23.5
 opencv_python==4.11.0.86
 pandas==2.2.3
 torch==2.2.0
+tqdm==4.67.1
 ultralytics==8.3.144

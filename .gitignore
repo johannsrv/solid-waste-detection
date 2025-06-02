@@ -1,3 +1,5 @@
 # Folders
 test/
 runs/
+
+*__pycache__/
