@@ -1,3 +1,4 @@
+from typing import Union, Tuple
 import torch
 from torch.nn import CrossEntropyLoss
 from torchvision.models.mobilenetv3 import MobileNetV3
@@ -50,7 +51,7 @@ class TrainModel:
             val_loss: float,
             epochs_no_improve: int, 
             best_val_loss: float, 
-            best_model_state: dict):
+            best_model_state: dict) -> Tuple:
         """
         Checks whether early stopping criteria are met.
 
@@ -78,7 +79,7 @@ class TrainModel:
 
         return best_val_loss, best_model_state, epochs_no_improve, stop
 
-    def _validation(self):
+    def _validation(self) -> Tuple:
         """
         Runs validation on the model.
 
@@ -106,7 +107,7 @@ class TrainModel:
         val_accuracy = 100 * correct / total
         return avg_loss, val_accuracy
     
-    def _calculate_loss(self, images, labels):
+    def _calculate_loss(self, images, labels) -> Tuple:
         """
         Computes the loss for a batch of data.
 
@@ -121,7 +122,7 @@ class TrainModel:
         loss = self.criterion(outputs, labels)
         return outputs, loss
 
-    def _move_to_device(self, images, labels):
+    def _move_to_device(self, images, labels) -> float:
         """
         Moves input data to the appropriate device and performs a single training step.
 
@@ -142,7 +143,10 @@ class TrainModel:
 
         return loss.item()
 
-    def train_model(self, lr: float, one_train: bool = False):
+    def train_model(
+            self, 
+            lr: float, 
+            one_train: bool = False) -> Union[torch.nn.Module, Tuple]:
         """
         Trains the model with the specified learning rate, applying early stopping.
 
@@ -196,7 +200,7 @@ class TrainModel:
             return self.model
         return self.model, val_loss, avg_train_loss
     
-    def selection_lr_model(self, list_lr: list[float]):
+    def selection_lr_model(self, list_lr: list[float]) -> torch.nn.Module:
         """
         Trains the model using a list of learning rates and returns the best-performing model.
 
@@ -212,6 +216,7 @@ class TrainModel:
         for lr in list_lr:
             print("training with learning rate:", lr)
             model_train, val_loss, _ = self.train_model(lr=lr, one_train=False)
+            print(type(model_train))
             if val_loss < best_val_loss:
                 best_model = model_train
                 best_val_loss = val_loss

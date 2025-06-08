@@ -9,7 +9,7 @@ class Model:
         device (str): The device on which the model will be loaded (e.g., 'cpu' or 'cuda').
         num_classes (int): The number of output classes for the classification task.
     """
-    def __init__(self, device: str, num_classes: int =6):
+    def __init__(self, device: str, num_classes: int =6) -> None:
         """
         Initializes the Model instance with the specified device and number of output classes.
 
@@ -20,7 +20,7 @@ class Model:
         self.device = device
         self.num_classes = num_classes
 
-    def __generar_model(self):
+    def __generar_model(self) -> None:
         """
         Loads a pretrained MobileNetV3-Large model and prepares it for customization.
         Extracts the number of input features for the final classification layers.
@@ -33,7 +33,7 @@ class Model:
         self.in_features = self.model.classifier[0].in_features
 
 
-    def get_model(self):
+    def get_model(self) -> torch.nn.Module:
         """
         Customizes the final classification layers of the pretrained model.
 
