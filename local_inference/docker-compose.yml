@@ -4,6 +4,7 @@ services:
   app:
     build: .
     runtime: nvidia
+    shm_size: '2gb'
     volumes:
       - ./train_model/__main__.py:/train_model/__main__.py 
       # - ./recycling_detection:/recycling_detection
