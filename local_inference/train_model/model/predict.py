@@ -15,7 +15,18 @@ from torch.nn import Module
 from torch.utils.data import DataLoader
 
 class Prediction:
+    """
+    A utility class to test a trained classification model and generate visual evaluation reports.
+
+    Attributes:
+        path_save_test (str): Directory where the test results and visual reports will be saved.
+        y_true (List[int]): List of ground truth labels collected during evaluation.
+        y_pred (List[int]): List of predicted labels collected during evaluation.
+    """
     def __init__(self) -> None:
+        """
+        Initializes the Prediction class with default values and creates storage for predictions.
+        """
         self.path_save_test = "results_test"
         self.y_true = []
         self.y_pred = []
@@ -28,6 +39,19 @@ class Prediction:
             device: str = "cpu",
             number_samper: int = 5,
         ) -> None:
+        """
+        Tests the model on a batch of data and saves a visual comparison of predictions vs. ground truth.
+
+        Args:
+            model (torch.nn.Module): The trained model to evaluate.
+            test_loader (torch.utils.data.DataLoader): DataLoader containing test data.
+            clases (list): List of class names corresponding to class indices.
+            device (str, optional): Device to run the model on (default is "cpu").
+            number_samper (int, optional): Number of sample predictions to display (default is 5).
+
+        Saves:
+            - A visual grid of images showing true vs. predicted labels: 'reporte_visual.png'
+        """
         os.makedirs(self.path_save_test, exist_ok=True)
 
         images_shown = 0
@@ -66,6 +90,17 @@ class Prediction:
     def generate_visual_metrics_report(
             self, 
             clases: list) -> None:
+        """
+        Generates and saves various visual reports based on the model's performance.
+
+        Args:
+            clases (list): List of class names corresponding to class indices.
+
+        Saves:
+            - Classification report as a table: 'clasification_report.png'
+            - Confusion matrix: 'Confusion_Matrix.png'
+            - Bar chart showing F1 scores per class: 'f1_score_bar_chart.png'
+        """
         
         # save classification whint image
         report_dict = classification_report(

@@ -8,6 +8,21 @@ from model.predict import Prediction
 from model.train import TrainModel
 
 def optimizar_model(model):
+    """
+    Applies dynamic quantization to reduce the model size and improve inference performance.
+
+    The function:
+    - Moves the model to CPU.
+    - Applies dynamic quantization to `torch.nn.Linear` layers using 8-bit integers (qint8).
+    - Converts the quantized model into a TorchScript scripted model for optimized deployment.
+
+    Args:
+        model (torch.nn.Module): The trained PyTorch model to optimize.
+
+    Returns:
+        torch.jit.ScriptModule: The optimized scripted model.
+    """
+    ...
     # convert the model to evaluation mode
     model = model.to('cpu')
 
@@ -24,6 +39,21 @@ def optimizar_model(model):
     return scripted_model
 
 def save_model(model, path: str, save_model_weights: bool ) -> None:
+    """
+    Saves the model in different formats depending on the configuration.
+
+    Args:
+        model (torch.nn.Module or torch.jit.ScriptModule): The trained (and optionally scripted) model.
+        path (str): The base path to save the model files.
+        save_model_weights (bool): If True, only the model weights and scripted model are saved.
+                                   If False, the entire model and scripted version are saved.
+
+    Saves:
+        - Model weights in `<path>_weights_quantized.pth`
+        - Scripted model (if applicable) in `<path>_scripted_quantized.pth`
+        - Entire model in `<path>_quantized.pth`
+        - Scripted model (if applicable) in `<path>_scripted.pth`
+    """
     complement_path = [
         "weights_quantized", 
         "scripted_quantized", 
@@ -53,6 +83,23 @@ def main(
         list_lr: Optional[List[float]] = None,
         lr: float = 1e-3, 
         save_model_weights: bool = True) -> None:
+    """
+    Main function for training, optimizing, evaluating, and saving a classification model.
+
+    This function:
+    - Initializes the model and data loaders.
+    - Trains the model using a fixed or multiple learning rates.
+    - Optimizes the model using dynamic quantization and TorchScript scripting.
+    - Evaluates the model on the test set and generates visual performance reports.
+    - Saves the model in different formats.
+
+    Args:
+        list_lr (Optional[List[float]], optional): List of learning rates for selection. 
+            If None, the model is trained using the provided `lr` value. Default is None.
+        lr (float, optional): Learning rate for training if `list_lr` is not used. Default is 1e-3.
+        save_model_weights (bool, optional): If True, saves only the model weights and scripted model.
+            If False, saves the full model. Default is True.
+    """
     
     path = "detecction_recycling.v1i.folder"
 
@@ -110,6 +157,5 @@ def main(
     save_model(model, path, save_model_weights)
 
 if __name__ == "__main__":
-    # os.makedirs("results_test", exist_ok=True)
     list_lr = [1e-3, 1e-4, 1e-5, 1e-7]
     main(list_lr)
