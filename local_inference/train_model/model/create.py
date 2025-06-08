@@ -1,4 +1,4 @@
-from torch.nn import Sequential, Linear, Hardswish, Dropout
+from torch.nn import Sequential, Linear, Hardswish, Dropout, Module
 from torchvision import models
 
 class Model:
@@ -33,7 +33,7 @@ class Model:
         self.in_features = self.model.classifier[0].in_features
 
 
-    def get_model(self) -> torch.nn.Module:
+    def get_model(self) -> Module:
         """
         Customizes the final classification layers of the pretrained model.
 

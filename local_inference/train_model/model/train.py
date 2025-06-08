@@ -25,7 +25,7 @@ class TrainModel:
         device: str, 
         max_epochs: int = 10,
         patience: int = 5,
-        range_improvement: float = 0.05) -> None:
+        range_improvement: float = 0.0) -> None:
         """
         Initializes the training setup with model, dataloaders, training parameters and loss function.
 
@@ -216,7 +216,6 @@ class TrainModel:
         for lr in list_lr:
             print("training with learning rate:", lr)
             model_train, val_loss, _ = self.train_model(lr=lr, one_train=False)
-            print(type(model_train))
             if val_loss < best_val_loss:
                 best_model = model_train
                 best_val_loss = val_loss
