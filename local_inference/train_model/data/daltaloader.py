@@ -127,9 +127,9 @@ class CreateDataLoader:
         """
         list_batch = []
         means, std = self.calculate_mean_std()
+        self.classes = []
 
         for folder in self.list_dir:
-
             if folder in self.data:
                 root = os.path.join(self.data_dir, folder)
                 transforms_images = transforms.Compose([
@@ -143,6 +143,9 @@ class CreateDataLoader:
                     root=root,
                     transform=transforms_images
                 )
+
+                if not self.classes:
+                    self.classes = datasets_images.classes
 
                 dataloader_images = DataLoader(
                     datasets_images,
