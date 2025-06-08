@@ -6,7 +6,7 @@ services:
     runtime: nvidia
     shm_size: '2gb'
     volumes:
-      - ./train_model/__main__.py:/train_model/__main__.py 
+      - ./train_model:/train_model
       # - ./recycling_detection:/recycling_detection
     ports:
       - "8000:8000"
