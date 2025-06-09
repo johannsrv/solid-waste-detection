@@ -1,4 +1,4 @@
-from torch.nn import Sequential, Linear, Hardswish, Dropout, Module
+from torch.nn import Sequential, Linear, ReLU, Dropout, Module
 from torchvision import models
 
 class Model:
@@ -42,20 +42,11 @@ class Model:
         """
         self.__generar_model()
         self.model.classifier = Sequential(
-            Linear(self.in_features, 512),
-            Hardswish(),
-            Dropout(0.3),
-
-            Linear(512, 256),
-            Hardswish(),
-            
-            Linear(256, 128),
-            Hardswish(),
+            Linear(self.in_features, 256),
+            ReLU(),
             Dropout(0.4),
-            
-            Linear(128, self.num_classes)
+            Linear(256, self.num_classes)
         )
-
         self.model = self.model.to(self.device)
 
         return self.model
