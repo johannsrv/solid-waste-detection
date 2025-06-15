@@ -1,21 +1,48 @@
 FROM pytorch/pytorch:2.2.0-cuda11.8-cudnn8-runtime
 
+# Install optimized system dependencies
 RUN apt-get update && \
     apt-get install -y \
-      libgl1-mesa-glx \
-      libglib2.0-0 \
-    && rm -rf /var/lib/apt/lists/*
+        libgl1-mesa-glx \
+        libglib2.0-0 \
+        v4l-utils \
+        ffmpeg \
+        libsm6 \
+        libxext6 \
+        gstreamer1.0-plugins-base \
+        gstreamer1.0-plugins-good \
+        gstreamer1.0-plugins-bad \
+        gstreamer1.0-plugins-ugly \
+        gstreamer1.0-libav \
+        gstreamer1.0-tools \
+        && \
+    rm -rf /var/lib/apt/lists/*
 
-WORKDIR /train_model
+# Just create user (video group already exists)
+RUN useradd -m -u 1000 -G video -s /bin/bash appuser
 
-# Primero copia los datos (carpeta crítica)
-COPY train_model/detecction_recycling.v1i.folder /train_model/detecction_recycling.v1i.folder
+# If you want to train the model on this line
+# WORKDIR /train_model
+# COPY train_model/detecction_recycling.v1i.folder /train_model/detecction_recycling.v1i.folder
 
-# Luego copia requirements e instala
+# If you want to use local inference use this
+WORKDIR /app
+
+# Copy and install requirements
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Finalmente copia el resto del código
+# Copy code and models
 COPY train_model/ /train_model/
+COPY app/ /app/
 
-CMD ["python", "__main__.py"]
+# Copy improved entrypoint
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Set non-root user
+USER appuser
+
+# Set default entrypoint and command
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["python", "/app/__main__.py"]
