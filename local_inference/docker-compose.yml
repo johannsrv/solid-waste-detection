@@ -25,4 +25,4 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
-    command: ["python", "/app/__main__.py"]
+    command: ["python", "__main__.py"]
