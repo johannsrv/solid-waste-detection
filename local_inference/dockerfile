@@ -1,8 +1,9 @@
 FROM pytorch/pytorch:2.2.0-cuda11.8-cudnn8-runtime
 
-# Install optimized system dependencies
+# 1) Instala dependencias de sistema, incluido python3-tk
 RUN apt-get update && \
     apt-get install -y \
+        python3-tk \
         libgl1-mesa-glx \
         libglib2.0-0 \
         v4l-utils \
@@ -15,34 +16,33 @@ RUN apt-get update && \
         gstreamer1.0-plugins-ugly \
         gstreamer1.0-libav \
         gstreamer1.0-tools \
-        && \
+        tk \
+        x11-apps && \
     rm -rf /var/lib/apt/lists/*
 
-# Just create user (video group already exists)
+# 2) Crea usuario 'appuser' en el grupo video
 RUN useradd -m -u 1000 -G video -s /bin/bash appuser
 
-# If you want to train the model on this line
-# WORKDIR /train_model
-# COPY train_model/detecction_recycling.v1i.folder /train_model/detecction_recycling.v1i.folder
-
-# If you want to use local inference use this
+# 3) Define el directorio de trabajo
 WORKDIR /app
 
-# Copy and install requirements
-COPY requirements.txt .
+# 4) Copia requirements y los instala
+COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir flask gunicorn
 
-# Copy code and models
+# 5) Copia código de entrenamiento y de app
 COPY train_model/ /train_model/
 COPY app/ /app/
 
-# Copy improved entrypoint
+# 6) Copia entrypoint y dale permisos
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Set non-root user
+# 7) Ejecuta como appuser
 USER appuser
 
-# Set default entrypoint and command
+# 8) Entry point
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["python", "/app/__main__.py"]
+# 9) Comando por defecto: inference
+CMD ["inference"]
