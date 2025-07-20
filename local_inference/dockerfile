@@ -6,7 +6,7 @@ RUN apt-get update && \
         python3-tk \
         libgl1-mesa-glx \
         libglib2.0-0 \
-        v4l-utils \
+        v4l-utils \ 
         ffmpeg \
         libsm6 \
         libxext6 \
