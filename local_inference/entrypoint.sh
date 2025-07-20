@@ -21,7 +21,7 @@ done
 
 echo "[DEBUG] SELECTED_MODE: $SELECTED_MODE"
 
-if [ "$SELECTED_MODE" = "train" ]; then
+if [ "$SELECTED_MODE" = "train"]; then
     echo "[ENTRYPOINT] Iniciando MODO TRAINING"
     cd /train_model
     exec python __main__.py
