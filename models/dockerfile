@@ -1,0 +1,28 @@
+FROM pytorch/pytorch:2.2.0-cuda11.8-cudnn8-runtime
+
+# Instala dependencias del sistema necesarias
+RUN apt-get update && apt-get install -y \
+    curl \
+    libgl1 \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Instala Poetry
+RUN curl -sSL https://install.python-poetry.org | python3 -
+ENV PATH="/root/.local/bin:$PATH"
+
+# Establece directorio de trabajo
+WORKDIR /app
+
+# Copia dependencias y las instala sin crear entorno virtual
+COPY pyproject.toml poetry.lock* /app/
+RUN poetry config virtualenvs.create false && poetry install --no-root --no-interaction --no-ansi
+
+# Copia el resto del código
+COPY . /app
+
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["inference"]

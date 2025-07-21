@@ -1,0 +1,28 @@
+[project]
+name = "train-models"
+version = "0.1.0"
+description = "This is for training the models"
+authors = [
+    { name = "johann rodriguez", email = "johann.rodriguezv@gmail.com" }
+]
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+
+dependencies = [
+    # Numpy compatible con Python 3.10
+    "numpy>=1.23.0,<2.0.0",
+
+    # Otras dependencias
+    "tqdm>=4.67.1,<5.0.0",
+    "pandas>=2.3.1,<3.0.0",
+    "matplotlib>=3.10.3,<4.0.0",
+    "seaborn>=0.13.2,<0.14.0",
+    "opencv-python (<4.12.0.88)",
+    "scikit-learn (>=1.7.1,<2.0.0)",
+    "pillow (>=11.3.0,<12.0.0)"
+]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
