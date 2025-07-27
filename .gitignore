@@ -8,3 +8,4 @@ runs/
 
 # Files
 models/.env
+data/.dvc/
