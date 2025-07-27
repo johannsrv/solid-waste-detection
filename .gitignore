@@ -1,6 +1,8 @@
 # Folders
 test/
 runs/
+*Garbage classification/
+*.dvc/
 */images_data/
 */venv/
 
@@ -8,4 +10,3 @@ runs/
 
 # Files
 models/.env
-data/.dvc/
