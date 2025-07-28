@@ -1,0 +1,6 @@
+outs:
+- md5: 2dc95c0f0adfa3c354b4c80d8aff2c3b.dir
+  size: 43282402
+  nfiles: 2527
+  hash: md5
+  path: Garbage classification
